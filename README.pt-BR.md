@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/shiosalt/Strata/releases/latest"><img src="https://img.shields.io/github/v/release/Niko1221/Strata?label=download&color=0ab887" alt="Baixar o Strata"></a>
+  <a href="https://github.com/Niko1221/Strata/releases/latest"><img src="https://img.shields.io/github/v/release/Niko1221/Strata?label=download&color=0ab887" alt="Baixar o Strata"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/Niko1221/Strata" alt="Licença MIT"></a>
   <a href="https://github.com/sponsors/Niko1221"><img src="https://img.shields.io/badge/Sponsor-EA4AAA?logo=githubsponsors&logoColor=fff" alt="Apoie o Strata no GitHub Sponsors"></a>
   <a href="https://buymeacoffee.com/strataengine"><img src="https://img.shields.io/badge/Buy_me_a_coffee-FFDD00?logo=buymeacoffee&logoColor=000" alt="Apoie o Strata no Buy Me a Coffee"></a>
@@ -24,7 +24,7 @@
 <p align="center"><sub><a href="README.md">English</a> · <a href="README.zh-CN.md">简体中文</a> · <a href="README.ja.md">日本語</a> · <a href="README.de.md">Deutsch</a> · <a href="README.fr.md">Français</a> · <a href="README.es.md">Español</a> · <b>Português</b> · <a href="README.pl.md">Polski</a></sub></p>
 
 > [!IMPORTANT]
-> **Este é um fork não oficial** ([shiosalt/Strata](https://github.com/shiosalt/Strata)) de [Niko1221/Strata](https://github.com/Niko1221/Strata). Ele adiciona o **NVIDIA-Nemotron-3.5-Super-VL-120B-A12B** com um motor próprio. Os desenvolvedores do Strata não escreveram nem revisaram esta parte: relate problemas com ela [aqui](https://github.com/shiosalt/Strata/issues), não no projeto original. O resto deste README é do projeto original, assim como os instaladores e os links de versões abaixo (eles não trazem o motor do Nemotron). Veja [Modelos](#nemotron-models).
+> **Este é um fork não oficial** ([shiosalt/Strata_Nemotron-3.5-Super-VL](https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL)) de [Niko1221/Strata](https://github.com/Niko1221/Strata). Ele adiciona o **NVIDIA-Nemotron-3.5-Super-VL-120B-A12B** com um motor próprio. Os desenvolvedores do Strata não escreveram nem revisaram esta parte: relate problemas com ela [aqui](https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL/issues), não no projeto original. O resto deste README é do projeto original, assim como os instaladores e os links de versões abaixo (eles não trazem o motor do Nemotron). Veja [Modelos](#nemotron-models).
 
 **Gratuito, de código aberto e seu para executar.** Use o Strata no desktop ou com suas ferramentas de programação favoritas. Não precisa de conta.
 
@@ -116,8 +116,8 @@ Não sabe o que cabe? [Escolha um modelo para o seu computador](docs/MODELS.md#p
 
 **Nemotron 3.5 Super com o motor pronto (precisa de Python 3.10+, Git e um driver NVIDIA 580 ou mais novo):**
 
-1. Baixe este repositório: `git clone https://github.com/shiosalt/Strata.git` e depois `cd Strata`.
-2. Baixe `strata-nemotron-0.1.1-windows-x64-cuda13.zip` em [Releases](https://github.com/shiosalt/Strata/releases/tag/nemotron-v0.1.1) e descompacte na pasta do repositório (isso cria `engine-nemotron\`).
+1. Baixe este repositório: `git clone https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL.git` e depois `cd Strata_Nemotron-3.5-Super-VL`.
+2. Baixe `strata-nemotron-0.1.1-windows-x64-cuda13.zip` em [Releases](https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL/releases/tag/nemotron-v0.1.1) e descompacte na pasta do repositório (isso cria `engine-nemotron\`).
 3. Instale os pacotes Python:
 
    ```bat
@@ -141,7 +141,7 @@ O resto desta seção é do projeto original, para os modelos dele.
 
 ### Aplicativo de desktop
 
-**[Baixar o Strata para Windows, Linux ou Mac →](https://github.com/shiosalt/Strata/releases/latest)**
+**[Baixar o Strata para Windows, Linux ou Mac →](https://github.com/Niko1221/Strata/releases/latest)**
 
 Instale o aplicativo, escolha um modelo e comece a conversar. Há um instalador por sistema. Na primeira vez que abre, o aplicativo baixa o motor da sua placa de vídeo. [Ajuda com o instalador](docs/INSTALL.md#the-app).
 
@@ -164,13 +164,13 @@ Prefere o terminal? Instale o Strata e execute **`strata launch`**.
 **Linux / Mac**
 
 ```sh
-curl -fsSL https://github.com/shiosalt/Strata/releases/latest/download/install.sh -o install.sh && sh install.sh
+curl -fsSL https://github.com/Niko1221/Strata/releases/latest/download/install.sh -o install.sh && sh install.sh
 ```
 
 **Windows PowerShell**
 
 ```powershell
-irm https://github.com/shiosalt/Strata/releases/latest/download/install.ps1 | iex
+irm https://github.com/Niko1221/Strata/releases/latest/download/install.ps1 | iex
 ```
 
 No Windows, abra um novo terminal depois. Em seguida:

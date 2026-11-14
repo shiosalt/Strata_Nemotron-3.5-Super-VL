@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/shiosalt/Strata/releases/latest"><img src="https://img.shields.io/github/v/release/Niko1221/Strata?label=download&color=0ab887" alt="Download Strata"></a>
+  <a href="https://github.com/Niko1221/Strata/releases/latest"><img src="https://img.shields.io/github/v/release/Niko1221/Strata?label=download&color=0ab887" alt="Download Strata"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/Niko1221/Strata" alt="MIT license"></a>
   <a href="https://github.com/sponsors/Niko1221"><img src="https://img.shields.io/badge/Sponsor-EA4AAA?logo=githubsponsors&logoColor=fff" alt="Sponsor Strata on GitHub Sponsors"></a>
   <a href="https://buymeacoffee.com/strataengine"><img src="https://img.shields.io/badge/Buy_me_a_coffee-FFDD00?logo=buymeacoffee&logoColor=000" alt="Support Strata on Buy Me a Coffee"></a>
@@ -24,10 +24,10 @@
 <p align="center"><sub><b>English</b> · <a href="README.zh-CN.md">简体中文</a> · <a href="README.ja.md">日本語</a> · <a href="README.de.md">Deutsch</a> · <a href="README.fr.md">Français</a> · <a href="README.es.md">Español</a> · <a href="README.pt-BR.md">Português</a> · <a href="README.pl.md">Polski</a></sub></p>
 
 > [!IMPORTANT]
-> **This is an unofficial fork** ([shiosalt/Strata](https://github.com/shiosalt/Strata)) of
+> **This is an unofficial fork** ([shiosalt/Strata_Nemotron-3.5-Super-VL](https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL)) of
 > [Niko1221/Strata](https://github.com/Niko1221/Strata). It adds one model,
 > **NVIDIA-Nemotron-3.5-Super-VL-120B-A12B**, on an engine of its own. The Strata maintainers did not write
-> or review it: report problems with it [here](https://github.com/shiosalt/Strata/issues), not upstream.
+> or review it: report problems with it [here](https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL/issues), not upstream.
 > Everything else in this README is upstream's, and the installers and release links below are upstream's
 > (they do not contain the Nemotron engine). See [Models](#nemotron-models).
 
@@ -125,8 +125,8 @@ Not sure what fits? [Choose a model for your computer](docs/MODELS.md#pick-by-me
 
 **Nemotron 3.5 Super with the ready-made engine (needs Python 3.10+, Git and an NVIDIA driver 580 or newer):**
 
-1. Get this repository: `git clone https://github.com/shiosalt/Strata.git`, then `cd Strata`.
-2. Download `strata-nemotron-0.1.1-windows-x64-cuda13.zip` from [Releases](https://github.com/shiosalt/Strata/releases/tag/nemotron-v0.1.1) and unzip it into the repository folder (it makes `engine-nemotron\`).
+1. Get this repository: `git clone https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL.git`, then `cd Strata_Nemotron-3.5-Super-VL`.
+2. Download `strata-nemotron-0.1.1-windows-x64-cuda13.zip` from [Releases](https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL/releases/tag/nemotron-v0.1.1) and unzip it into the repository folder (it makes `engine-nemotron\`).
 3. Install the Python packages:
 
    ```bat
@@ -150,7 +150,7 @@ The rest of this section is upstream's, for its own models.
 
 ### Desktop app
 
-**[Download Strata for Windows, Linux or Mac →](https://github.com/shiosalt/Strata/releases/latest)**
+**[Download Strata for Windows, Linux or Mac →](https://github.com/Niko1221/Strata/releases/latest)**
 
 Install the app, choose a model, and start chatting. There is one installer for each system. On first start the app
 downloads the engine for your graphics card. [Help with the installer](docs/INSTALL.md#the-app).
@@ -174,13 +174,13 @@ Prefer the terminal? Install Strata, then run **`strata launch`**.
 **Linux / Mac**
 
 ```sh
-curl -fsSL https://github.com/shiosalt/Strata/releases/latest/download/install.sh -o install.sh && sh install.sh
+curl -fsSL https://github.com/Niko1221/Strata/releases/latest/download/install.sh -o install.sh && sh install.sh
 ```
 
 **Windows PowerShell**
 
 ```powershell
-irm https://github.com/shiosalt/Strata/releases/latest/download/install.ps1 | iex
+irm https://github.com/Niko1221/Strata/releases/latest/download/install.ps1 | iex
 ```
 
 On Windows, open a new terminal afterwards. Then:

@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/shiosalt/Strata/releases/latest"><img src="https://img.shields.io/github/v/release/Niko1221/Strata?label=download&color=0ab887" alt="Pobierz Stratę"></a>
+  <a href="https://github.com/Niko1221/Strata/releases/latest"><img src="https://img.shields.io/github/v/release/Niko1221/Strata?label=download&color=0ab887" alt="Pobierz Stratę"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/Niko1221/Strata" alt="Licencja MIT"></a>
   <a href="https://github.com/sponsors/Niko1221"><img src="https://img.shields.io/badge/Sponsor-EA4AAA?logo=githubsponsors&logoColor=fff" alt="Wesprzyj Stratę na GitHub Sponsors"></a>
   <a href="https://buymeacoffee.com/strataengine"><img src="https://img.shields.io/badge/Buy_me_a_coffee-FFDD00?logo=buymeacoffee&logoColor=000" alt="Wesprzyj Stratę na Buy Me a Coffee"></a>
@@ -24,7 +24,7 @@
 <p align="center"><sub><a href="README.md">English</a> · <a href="README.zh-CN.md">简体中文</a> · <a href="README.ja.md">日本語</a> · <a href="README.de.md">Deutsch</a> · <a href="README.fr.md">Français</a> · <a href="README.es.md">Español</a> · <a href="README.pt-BR.md">Português</a> · <b>Polski</b></sub></p>
 
 > [!IMPORTANT]
-> **To jest nieoficjalny fork** ([shiosalt/Strata](https://github.com/shiosalt/Strata)) projektu [Niko1221/Strata](https://github.com/Niko1221/Strata). Dodaje **NVIDIA-Nemotron-3.5-Super-VL-120B-A12B** z własnym silnikiem. Twórcy Straty nie napisali ani nie sprawdzili tej części: problemy z nią zgłaszaj [tutaj](https://github.com/shiosalt/Strata/issues), a nie w projekcie oryginalnym. Reszta tego README pochodzi z oryginału, tak jak instalatory i linki do wydań poniżej (nie zawierają silnika Nemotron). Zobacz [Modele](#nemotron-models).
+> **To jest nieoficjalny fork** ([shiosalt/Strata_Nemotron-3.5-Super-VL](https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL)) projektu [Niko1221/Strata](https://github.com/Niko1221/Strata). Dodaje **NVIDIA-Nemotron-3.5-Super-VL-120B-A12B** z własnym silnikiem. Twórcy Straty nie napisali ani nie sprawdzili tej części: problemy z nią zgłaszaj [tutaj](https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL/issues), a nie w projekcie oryginalnym. Reszta tego README pochodzi z oryginału, tak jak instalatory i linki do wydań poniżej (nie zawierają silnika Nemotron). Zobacz [Modele](#nemotron-models).
 
 **Bezpłatna, z otwartym kodem źródłowym i do uruchomienia u siebie.** Używaj Straty na swoim komputerze albo razem z ulubionymi narzędziami do programowania. Konto nie jest potrzebne.
 
@@ -119,8 +119,8 @@ Nie wiesz, co się zmieści? [Wybierz model do swojego komputera](docs/MODELS.md
 
 **Nemotron 3.5 Super z gotowym silnikiem (potrzebne: Python 3.10+, Git i sterownik NVIDIA 580 lub nowszy):**
 
-1. Pobierz to repozytorium: `git clone https://github.com/shiosalt/Strata.git`, potem `cd Strata`.
-2. Pobierz `strata-nemotron-0.1.1-windows-x64-cuda13.zip` z [Releases](https://github.com/shiosalt/Strata/releases/tag/nemotron-v0.1.1) i rozpakuj go do folderu repozytorium (powstanie `engine-nemotron\`).
+1. Pobierz to repozytorium: `git clone https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL.git`, potem `cd Strata_Nemotron-3.5-Super-VL`.
+2. Pobierz `strata-nemotron-0.1.1-windows-x64-cuda13.zip` z [Releases](https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL/releases/tag/nemotron-v0.1.1) i rozpakuj go do folderu repozytorium (powstanie `engine-nemotron\`).
 3. Zainstaluj pakiety Pythona:
 
    ```bat
@@ -144,7 +144,7 @@ Dalsza część tej sekcji pochodzi z oryginału i dotyczy jego modeli.
 
 ### Aplikacja na komputer
 
-**[Pobierz Stratę dla Windows, Linuxa lub Maca →](https://github.com/shiosalt/Strata/releases/latest)**
+**[Pobierz Stratę dla Windows, Linuxa lub Maca →](https://github.com/Niko1221/Strata/releases/latest)**
 
 Zainstaluj aplikację, wybierz model i zacznij rozmawiać. Dla każdego systemu jest jeden instalator. Przy pierwszym
 uruchomieniu aplikacja pobiera silnik dla twojej karty graficznej. [Pomoc z instalatorem](docs/INSTALL.md#the-app).
@@ -168,13 +168,13 @@ Wolisz terminal? Zainstaluj Stratę, a potem uruchom **`strata launch`**.
 **Linux / Mac**
 
 ```sh
-curl -fsSL https://github.com/shiosalt/Strata/releases/latest/download/install.sh -o install.sh && sh install.sh
+curl -fsSL https://github.com/Niko1221/Strata/releases/latest/download/install.sh -o install.sh && sh install.sh
 ```
 
 **Windows PowerShell**
 
 ```powershell
-irm https://github.com/shiosalt/Strata/releases/latest/download/install.ps1 | iex
+irm https://github.com/Niko1221/Strata/releases/latest/download/install.ps1 | iex
 ```
 
 W Windows otwórz potem nowe okno terminala. Następnie:

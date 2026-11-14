@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/shiosalt/Strata/releases/latest"><img src="https://img.shields.io/github/v/release/Niko1221/Strata?label=download&color=0ab887" alt="下载 Strata"></a>
+  <a href="https://github.com/Niko1221/Strata/releases/latest"><img src="https://img.shields.io/github/v/release/Niko1221/Strata?label=download&color=0ab887" alt="下载 Strata"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/Niko1221/Strata" alt="MIT 许可证"></a>
   <a href="https://github.com/sponsors/Niko1221"><img src="https://img.shields.io/badge/Sponsor-EA4AAA?logo=githubsponsors&logoColor=fff" alt="在 GitHub Sponsors 上支持 Strata"></a>
   <a href="https://buymeacoffee.com/strataengine"><img src="https://img.shields.io/badge/Buy_me_a_coffee-FFDD00?logo=buymeacoffee&logoColor=000" alt="在 Buy Me a Coffee 上支持 Strata"></a>
@@ -24,7 +24,7 @@
 <p align="center"><sub><a href="README.md">English</a> · <b>简体中文</b> · <a href="README.ja.md">日本語</a> · <a href="README.de.md">Deutsch</a> · <a href="README.fr.md">Français</a> · <a href="README.es.md">Español</a> · <a href="README.pt-BR.md">Português</a> · <a href="README.pl.md">Polski</a></sub></p>
 
 > [!IMPORTANT]
-> **这是 [Niko1221/Strata](https://github.com/Niko1221/Strata) 的非官方 fork**([shiosalt/Strata](https://github.com/shiosalt/Strata))。它用自己的引擎增加了 **NVIDIA-Nemotron-3.5-Super-VL-120B-A12B**。这部分不是 Strata 的开发者编写或审核的:相关问题请在[这里](https://github.com/shiosalt/Strata/issues)报告,不要报告给上游。本 README 的其余部分来自上游,下面的安装程序和发布链接也是上游的(不包含 Nemotron 引擎)。请看[模型](#nemotron-models)。
+> **这是 [Niko1221/Strata](https://github.com/Niko1221/Strata) 的非官方 fork**([shiosalt/Strata_Nemotron-3.5-Super-VL](https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL))。它用自己的引擎增加了 **NVIDIA-Nemotron-3.5-Super-VL-120B-A12B**。这部分不是 Strata 的开发者编写或审核的:相关问题请在[这里](https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL/issues)报告,不要报告给上游。本 README 的其余部分来自上游,下面的安装程序和发布链接也是上游的(不包含 Nemotron 引擎)。请看[模型](#nemotron-models)。
 
 **免费、开源，由你自己运行。** 在桌面上使用 Strata，或搭配你喜欢的编程工具。无需账号。
 
@@ -116,8 +116,8 @@ strata launch --family deepseek41 --model ist-das-2.00bpw --plan
 
 **用预构建的引擎运行 Nemotron 3.5 Super(需要 Python 3.10+、Git 和 580 或更新的 NVIDIA 驱动):**
 
-1. 获取本仓库:`git clone https://github.com/shiosalt/Strata.git`,然后 `cd Strata`。
-2. 从 [Releases](https://github.com/shiosalt/Strata/releases/tag/nemotron-v0.1.1) 下载 `strata-nemotron-0.1.1-windows-x64-cuda13.zip`,解压到仓库文件夹中(会生成 `engine-nemotron\`)。
+1. 获取本仓库:`git clone https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL.git`,然后 `cd Strata_Nemotron-3.5-Super-VL`。
+2. 从 [Releases](https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL/releases/tag/nemotron-v0.1.1) 下载 `strata-nemotron-0.1.1-windows-x64-cuda13.zip`,解压到仓库文件夹中(会生成 `engine-nemotron\`)。
 3. 安装 Python 包:
 
    ```bat
@@ -141,7 +141,7 @@ strata launch --family deepseek41 --model ist-das-2.00bpw --plan
 
 ### 桌面应用
 
-**[下载适用于 Windows、Linux 或 Mac 的 Strata →](https://github.com/shiosalt/Strata/releases/latest)**
+**[下载适用于 Windows、Linux 或 Mac 的 Strata →](https://github.com/Niko1221/Strata/releases/latest)**
 
 安装应用，选择模型，就可以开始聊天。每个系统只有一个安装程序。首次启动时，应用会下载适合你显卡的引擎。[安装程序帮助](docs/INSTALL.md#the-app)。
 
@@ -164,13 +164,13 @@ strata launch --family deepseek41 --model ist-das-2.00bpw --plan
 **Linux / Mac**
 
 ```sh
-curl -fsSL https://github.com/shiosalt/Strata/releases/latest/download/install.sh -o install.sh && sh install.sh
+curl -fsSL https://github.com/Niko1221/Strata/releases/latest/download/install.sh -o install.sh && sh install.sh
 ```
 
 **Windows PowerShell**
 
 ```powershell
-irm https://github.com/shiosalt/Strata/releases/latest/download/install.ps1 | iex
+irm https://github.com/Niko1221/Strata/releases/latest/download/install.ps1 | iex
 ```
 
 在 Windows 上，安装后请打开一个新的终端。然后运行：

@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/shiosalt/Strata/releases/latest"><img src="https://img.shields.io/github/v/release/Niko1221/Strata?label=download&color=0ab887" alt="Strata をダウンロード"></a>
+  <a href="https://github.com/Niko1221/Strata/releases/latest"><img src="https://img.shields.io/github/v/release/Niko1221/Strata?label=download&color=0ab887" alt="Strata をダウンロード"></a>
   <a href="LICENSE"><img src="https://img.shields.io/github/license/Niko1221/Strata" alt="MIT ライセンス"></a>
   <a href="https://github.com/sponsors/Niko1221"><img src="https://img.shields.io/badge/Sponsor-EA4AAA?logo=githubsponsors&logoColor=fff" alt="GitHub Sponsors で Strata を支援する"></a>
   <a href="https://buymeacoffee.com/strataengine"><img src="https://img.shields.io/badge/Buy_me_a_coffee-FFDD00?logo=buymeacoffee&logoColor=000" alt="Buy Me a Coffee で Strata を支援する"></a>
@@ -24,7 +24,7 @@
 <p align="center"><sub><a href="README.md">English</a> · <a href="README.zh-CN.md">简体中文</a> · <b>日本語</b> · <a href="README.de.md">Deutsch</a> · <a href="README.fr.md">Français</a> · <a href="README.es.md">Español</a> · <a href="README.pt-BR.md">Português</a> · <a href="README.pl.md">Polski</a></sub></p>
 
 > [!IMPORTANT]
-> **これは非公式の fork です**([shiosalt/Strata](https://github.com/shiosalt/Strata)。元は [Niko1221/Strata](https://github.com/Niko1221/Strata))。**NVIDIA-Nemotron-3.5-Super-VL-120B-A12B** を専用のエンジンで動かす機能を足しています。この部分は Strata の開発者が書いたものでも確認したものでもありません。問題は本家ではなく[こちら](https://github.com/shiosalt/Strata/issues)に報告してください。この README のほかの部分は本家のもので、下のインストーラーとリリースのリンクも本家のものです(Nemotron のエンジンは入っていません)。[モデル](#nemotron-models)を見てください。
+> **これは非公式の fork です**([shiosalt/Strata_Nemotron-3.5-Super-VL](https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL)。元は [Niko1221/Strata](https://github.com/Niko1221/Strata))。**NVIDIA-Nemotron-3.5-Super-VL-120B-A12B** を専用のエンジンで動かす機能を足しています。この部分は Strata の開発者が書いたものでも確認したものでもありません。問題は本家ではなく[こちら](https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL/issues)に報告してください。この README のほかの部分は本家のもので、下のインストーラーとリリースのリンクも本家のものです(Nemotron のエンジンは入っていません)。[モデル](#nemotron-models)を見てください。
 
 **無料でオープンソース。自分の環境で動かせます。** デスクトップで、またはお好みのコーディングツールと一緒に Strata を使えます。アカウントは不要です。
 
@@ -116,8 +116,8 @@ Strata 0.2.5 で 2.00 bpw のセットを使って測定しました。「出力
 
 **Nemotron 3.5 Super をビルド済みのエンジンで使う(Python 3.10 以降、Git、NVIDIA ドライバー 580 以降が必要):**
 
-1. このリポジトリを取得します: `git clone https://github.com/shiosalt/Strata.git` のあと `cd Strata`。
-2. [Releases](https://github.com/shiosalt/Strata/releases/tag/nemotron-v0.1.1) から `strata-nemotron-0.1.1-windows-x64-cuda13.zip` をダウンロードし、リポジトリのフォルダーに展開します(`engine-nemotron\` ができます)。
+1. このリポジトリを取得します: `git clone https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL.git` のあと `cd Strata_Nemotron-3.5-Super-VL`。
+2. [Releases](https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL/releases/tag/nemotron-v0.1.1) から `strata-nemotron-0.1.1-windows-x64-cuda13.zip` をダウンロードし、リポジトリのフォルダーに展開します(`engine-nemotron\` ができます)。
 3. Python のパッケージを入れます:
 
    ```bat
@@ -141,7 +141,7 @@ Strata 0.2.5 で 2.00 bpw のセットを使って測定しました。「出力
 
 ### デスクトップアプリ
 
-**[Windows、Linux、Mac 用の Strata をダウンロード →](https://github.com/shiosalt/Strata/releases/latest)**
+**[Windows、Linux、Mac 用の Strata をダウンロード →](https://github.com/Niko1221/Strata/releases/latest)**
 
 アプリをインストールし、モデルを選んで、チャットを始めましょう。インストーラーはシステムごとに1つです。初回起動時に、アプリがお使いのグラフィックスカード用のエンジンをダウンロードします。[インストーラーのヘルプ](docs/INSTALL.md#the-app)。
 
@@ -164,13 +164,13 @@ Strata 0.2.5 で 2.00 bpw のセットを使って測定しました。「出力
 **Linux / Mac**
 
 ```sh
-curl -fsSL https://github.com/shiosalt/Strata/releases/latest/download/install.sh -o install.sh && sh install.sh
+curl -fsSL https://github.com/Niko1221/Strata/releases/latest/download/install.sh -o install.sh && sh install.sh
 ```
 
 **Windows PowerShell**
 
 ```powershell
-irm https://github.com/shiosalt/Strata/releases/latest/download/install.ps1 | iex
+irm https://github.com/Niko1221/Strata/releases/latest/download/install.ps1 | iex
 ```
 
 Windows では、インストール後に新しいターミナルを開きます。そのあと:

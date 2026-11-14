@@ -44,7 +44,7 @@ hardware drivers. Models and updates need an internet connection to download.
 
 ## The app
 
-1. Open the [latest release](https://github.com/shiosalt/Strata/releases/latest).
+1. Open the [latest release](https://github.com/Niko1221/Strata/releases/latest).
 2. Download the one installer for your system. There is one per system, not one per graphics card:
    - **Windows:** run `Strata-0.2.13-windows-x64-setup.exe`. It installs for your user and needs no administrator rights.
    - **Linux:** make `Strata-0.2.13-linux-x86_64.AppImage` executable, then open it. If FUSE is unavailable, run the

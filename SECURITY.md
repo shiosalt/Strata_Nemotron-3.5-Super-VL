@@ -1,9 +1,9 @@
 # Security
 
-> **This fork** ([shiosalt/Strata](https://github.com/shiosalt/Strata)): report a vulnerability in its Nemotron
+> **This fork** ([shiosalt/Strata_Nemotron-3.5-Super-VL](https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL)): report a vulnerability in its Nemotron
 > additions (`src/nemotron/`, `strata_control/nemotron35.py`, `tools/nemotron/`, the `nemotron35` family in the
 > Terminal) privately through this fork's **Security** tab
-> ([direct link](https://github.com/shiosalt/Strata/security/advisories/new)), not upstream. Everything below is
+> ([direct link](https://github.com/shiosalt/Strata_Nemotron-3.5-Super-VL/security/advisories/new)), not upstream. Everything below is
 > upstream's policy and applies to upstream's code.
 
 ## Reporting a vulnerability
