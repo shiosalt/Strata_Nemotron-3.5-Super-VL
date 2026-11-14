@@ -117,7 +117,7 @@ Medido con el conjunto de 2.00 bpw en Strata 0.2.5. «Salida» es la velocidad d
 **Nemotron 3.5 Super con el motor ya compilado (necesita Python 3.10+, Git y un controlador NVIDIA 580 o más reciente):**
 
 1. Descarga este repositorio: `git clone https://github.com/shiosalt/Strata.git` y después `cd Strata`.
-2. Descarga `strata-nemotron-0.1.0-windows-x64-cuda13.zip` desde [Releases](https://github.com/shiosalt/Strata/releases/tag/nemotron-v0.1.0) y descomprímelo en la carpeta del repositorio (crea `engine-nemotron\`).
+2. Descarga `strata-nemotron-0.1.1-windows-x64-cuda13.zip` desde [Releases](https://github.com/shiosalt/Strata/releases/tag/nemotron-v0.1.1) y descomprímelo en la carpeta del repositorio (crea `engine-nemotron\`).
 3. Instala los paquetes de Python:
 
    ```bat

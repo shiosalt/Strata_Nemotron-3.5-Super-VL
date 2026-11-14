@@ -41,8 +41,8 @@ RTX 5060 Ti 16GB × 2(sm_120。GPU 0 は PCIe Gen3 x4、GPU 1 は Gen4 x8)、Ryz
 ## 導入して起動する(Terminal)
 
 エンジンは本家のリリースのパッケージに入っていません。この fork の
-[Releases](https://github.com/shiosalt/Strata/releases/tag/nemotron-v0.1.0) にあるビルド済みのエンジン
-(`strata-nemotron-0.1.0-windows-x64-cuda13.zip`、Windows x64、NVIDIA ドライバー 580 以降、AVX2 の CPU)をこのチェックアウトに展開する
+[Releases](https://github.com/shiosalt/Strata/releases/tag/nemotron-v0.1.1) にあるビルド済みのエンジン
+(`strata-nemotron-0.1.1-windows-x64-cuda13.zip`、Windows x64、NVIDIA ドライバー 580 以降、AVX2 の CPU)をこのチェックアウトに展開する
 (`engine-nemotron\` ができる)か、自分でビルドします(下の「ビルド」)。ビルド済みのエンジンには RTX 30 / 40 / 50(sm_86 / sm_89 /
 sm_120)向けのコードが入っていますが、試したのは RTX 50 だけです。作り方は `tools\nemotron\package.ps1` にあります。
 展開した場合は Python のパッケージを入れてから(`python -m venv .venv` のあと

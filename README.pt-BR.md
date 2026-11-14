@@ -117,7 +117,7 @@ Não sabe o que cabe? [Escolha um modelo para o seu computador](docs/MODELS.md#p
 **Nemotron 3.5 Super com o motor pronto (precisa de Python 3.10+, Git e um driver NVIDIA 580 ou mais novo):**
 
 1. Baixe este repositório: `git clone https://github.com/shiosalt/Strata.git` e depois `cd Strata`.
-2. Baixe `strata-nemotron-0.1.0-windows-x64-cuda13.zip` em [Releases](https://github.com/shiosalt/Strata/releases/tag/nemotron-v0.1.0) e descompacte na pasta do repositório (isso cria `engine-nemotron\`).
+2. Baixe `strata-nemotron-0.1.1-windows-x64-cuda13.zip` em [Releases](https://github.com/shiosalt/Strata/releases/tag/nemotron-v0.1.1) e descompacte na pasta do repositório (isso cria `engine-nemotron\`).
 3. Instale os pacotes Python:
 
    ```bat

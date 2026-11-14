@@ -117,7 +117,7 @@ Strata 0.2.5 で 2.00 bpw のセットを使って測定しました。「出力
 **Nemotron 3.5 Super をビルド済みのエンジンで使う(Python 3.10 以降、Git、NVIDIA ドライバー 580 以降が必要):**
 
 1. このリポジトリを取得します: `git clone https://github.com/shiosalt/Strata.git` のあと `cd Strata`。
-2. [Releases](https://github.com/shiosalt/Strata/releases/tag/nemotron-v0.1.0) から `strata-nemotron-0.1.0-windows-x64-cuda13.zip` をダウンロードし、リポジトリのフォルダーに展開します(`engine-nemotron\` ができます)。
+2. [Releases](https://github.com/shiosalt/Strata/releases/tag/nemotron-v0.1.1) から `strata-nemotron-0.1.1-windows-x64-cuda13.zip` をダウンロードし、リポジトリのフォルダーに展開します(`engine-nemotron\` ができます)。
 3. Python のパッケージを入れます:
 
    ```bat

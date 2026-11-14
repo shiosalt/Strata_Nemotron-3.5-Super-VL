@@ -117,7 +117,7 @@ strata launch --family deepseek41 --model ist-das-2.00bpw --plan
 **用预构建的引擎运行 Nemotron 3.5 Super(需要 Python 3.10+、Git 和 580 或更新的 NVIDIA 驱动):**
 
 1. 获取本仓库:`git clone https://github.com/shiosalt/Strata.git`,然后 `cd Strata`。
-2. 从 [Releases](https://github.com/shiosalt/Strata/releases/tag/nemotron-v0.1.0) 下载 `strata-nemotron-0.1.0-windows-x64-cuda13.zip`,解压到仓库文件夹中(会生成 `engine-nemotron\`)。
+2. 从 [Releases](https://github.com/shiosalt/Strata/releases/tag/nemotron-v0.1.1) 下载 `strata-nemotron-0.1.1-windows-x64-cuda13.zip`,解压到仓库文件夹中(会生成 `engine-nemotron\`)。
 3. 安装 Python 包:
 
    ```bat
