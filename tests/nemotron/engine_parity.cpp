@@ -98,7 +98,8 @@ std::vector<uint8_t> quantize(ggml_type type, std::vector<float>& w, int64_t n_p
 }
 
 /// The model as a GGUF (its matrices quantized; `m` gets the dequantized weights the file holds).
-void write_gguf(const std::filesystem::path& path, R::Model& m) {
+/// `kq`: the routed experts in UD-Q4_K_XL's types (up Q5_K / Q4_K, down Q5_0 / IQ4_NL) instead of UD-IQ3_XXS's
+void write_gguf(const std::filesystem::path& path, R::Model& m, bool kq = false) {
     const Geometry& g = m.g;
     std::vector<Tensor> ts;
     auto add = [&](const std::string& name, std::vector<float>& w, std::vector<uint64_t> shape, ggml_type type) {
@@ -131,8 +132,8 @@ void write_gguf(const std::filesystem::path& path, R::Model& m) {
         }
         if (k == BlockKind::Moe || k == BlockKind::MtpAttentionMoe) {
             const bool first = l == 1, mtp = k == BlockKind::MtpAttentionMoe;
-            const ggml_type ut = mtp ? GGML_TYPE_Q8_0 : first ? GGML_TYPE_IQ3_XXS : GGML_TYPE_IQ4_XS;
-            const ggml_type dt = mtp ? GGML_TYPE_Q8_0 : first ? GGML_TYPE_IQ4_NL : GGML_TYPE_Q2_0;
+            const ggml_type ut = mtp ? GGML_TYPE_Q8_0 : kq ? (first ? GGML_TYPE_Q5_K : GGML_TYPE_Q4_K) : first ? GGML_TYPE_IQ3_XXS : GGML_TYPE_IQ4_XS;
+            const ggml_type dt = mtp ? GGML_TYPE_Q8_0 : kq ? (first ? GGML_TYPE_Q5_0 : GGML_TYPE_IQ4_NL) : first ? GGML_TYPE_IQ4_NL : GGML_TYPE_Q2_0;
             add(p + "ffn_gate_inp.weight", b.router, {Nn, (uint64_t) g.n_expert}, GGML_TYPE_F32);
             add(p + "exp_probs_b.bias", b.probs_b, {(uint64_t) g.n_expert}, GGML_TYPE_F32);
             add(p + "ffn_latent_down.weight", b.latent_down, {Nn, (uint64_t) g.moe_latent}, GGML_TYPE_Q8_0);
@@ -516,6 +517,66 @@ int main() {
                 check(!pip_mtp.gen.empty() && pip_mtp.gen == seq.gen, buf);
             }
         }
+    }
+    // UD-Q4_K_XL's expert types (up Q5_K / Q4_K, down Q5_0 / IQ4_NL): the GPU's grouped products, the CPU's and the PCIe share read them,
+    // and the prompt's logits follow the reference (layer 1's Q5_0 down has no prompt MMQ: its chunks run in decode windows)
+    {
+        // 4- and 5-bit experts on random weights leave a routing tie in the reference's prompt (20 seeds tried, 2026-11-14: every one had
+        // one), and from a tie the engine and the reference may pick different experts.  So the logits are held to a loose bound that only
+        // catches broken arithmetic (wrong kernels give ~1.0; a tie gave up to 0.092), and the exact checks are elsewhere: the products in
+        // nemotron_grouped_mmvq_test, and here the same greedy tokens with and without MTP drafts
+        const std::filesystem::path gk = dir / "tiny-nemotron-kq.gguf";
+        R::Model mk = R::random_model(g, 2025);
+        for (int64_t l = 0; l < g.n_blocks(); ++l)
+            for (float& w : mk.blocks[(size_t) l].router) w *= 3.0f;
+        write_gguf(gk, mk, true);
+        std::vector<float> km;
+        const std::vector<std::vector<float>> rk = ref_logits(mk, prompt, &km);
+        int tie_at = -1;
+        for (size_t i = 0; i < km.size() && tie_at < 0; ++i)
+            if (km[i] < kFlipMargin) tie_at = (int) i;
+        auto runk = [&](int slots, int mtp, double pcie) {
+            N::EngineOptions o;
+            o.ctx = 512;
+            o.chunk = 32;
+            o.mtp = mtp;
+            o.expert_slots = slots;
+            o.max_gpus = 1;
+            o.warm = false;
+            o.adapt = false;
+            o.verbose = false;
+            o.reserve_mib = 0;
+            o.pcie_frac = pcie;
+            std::string err;
+            std::unique_ptr<N::Engine> e = N::Engine::load(gk.string(), o, err);
+            Result r;
+            if (!e) {
+                check(false, "K-quant experts: load: " + err);
+                return r;
+            }
+            e->feed(prompt, &r.prompt_logits);
+            r.gen = e->greedy(argmax(r.prompt_logits.data(), V), n_gen);
+            return r;
+        };
+        struct KCase {
+            int slots;
+            double pcie;
+            const char* name;
+        };
+        Result first_plain;
+        for (const KCase c : {KCase{16, 0, "every expert on the GPU"}, KCase{0, 0, "every expert on the CPU"}, KCase{6, 0, "split 6 GPU / 10 CPU"},
+                              KCase{6, 0.5, "split, half the misses over PCIe"}}) {
+            const Result r = runk(c.slots, 0, c.pcie);
+            if (r.prompt_logits.empty()) continue;
+            const float ep = rel_l2(r.prompt_logits.data(), rk.back().data(), V);
+            char buf[220];
+            std::snprintf(buf, sizeof buf, "K-quant experts (Q5_K / Q4_K up, Q5_0 / IQ4_NL down), %s: prompt logits vs the reference: rel. L2 %.3f%s",
+                          c.name, (double) ep, tie_at >= 0 ? " (a routing tie in the reference: bound 0.2)" : "");
+            check(ep < (tie_at >= 0 ? 0.2f : 0.08f), buf);
+            if (c.slots == 6 && c.pcie == 0) first_plain = r;
+        }
+        const Result spec = runk(6, 2, 0);
+        check(!first_plain.gen.empty() && spec.gen == first_plain.gen, "K-quant experts: MTP with 2 drafts, the same greedy tokens as plain decoding");
     }
     // a conversation that continues: the held state is reused, and its logits are those of a fresh read
     {

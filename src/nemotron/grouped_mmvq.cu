@@ -57,6 +57,8 @@ bool grouped_mmvq_supported(int t) {
     switch (t) {
         case GGML_TYPE_Q8_0: case GGML_TYPE_Q2_0: case GGML_TYPE_IQ2_XS: case GGML_TYPE_IQ2_S: case GGML_TYPE_IQ3_XXS:
         case GGML_TYPE_IQ4_NL: case GGML_TYPE_IQ4_XS: return true;
+        // Unsloth's UD-Q4_K_XL experts (up Q4_K / Q5_K / Q6_K, down Q5_0)
+        case GGML_TYPE_Q5_0: case GGML_TYPE_Q4_K: case GGML_TYPE_Q5_K: case GGML_TYPE_Q6_K: return true;
         default: return false;
     }
 }
@@ -72,6 +74,10 @@ void grouped_mmvq(int type, const GroupedEntry* ent, int n_ent, size_t w_off, co
         case GGML_TYPE_IQ3_XXS: launch<GGML_TYPE_IQ3_XXS, VDR_IQ3_XXS_Q8_1_MMVQ, vec_dot_iq3_xxs_q8_1>(ent, n_ent, w_off, x, x_stride, x_by_row, y, y_stride, n_in, n_out, st); break;
         case GGML_TYPE_IQ4_NL: launch<GGML_TYPE_IQ4_NL, VDR_IQ4_NL_Q8_1_MMVQ, vec_dot_iq4_nl_q8_1>(ent, n_ent, w_off, x, x_stride, x_by_row, y, y_stride, n_in, n_out, st); break;
         case GGML_TYPE_IQ4_XS: launch<GGML_TYPE_IQ4_XS, VDR_IQ4_XS_Q8_1_MMVQ, vec_dot_iq4_xs_q8_1>(ent, n_ent, w_off, x, x_stride, x_by_row, y, y_stride, n_in, n_out, st); break;
+        case GGML_TYPE_Q5_0: launch<GGML_TYPE_Q5_0, VDR_Q5_0_Q8_1_MMVQ, vec_dot_q5_0_q8_1>(ent, n_ent, w_off, x, x_stride, x_by_row, y, y_stride, n_in, n_out, st); break;
+        case GGML_TYPE_Q4_K: launch<GGML_TYPE_Q4_K, VDR_Q4_K_Q8_1_MMVQ, vec_dot_q4_K_q8_1>(ent, n_ent, w_off, x, x_stride, x_by_row, y, y_stride, n_in, n_out, st); break;
+        case GGML_TYPE_Q5_K: launch<GGML_TYPE_Q5_K, VDR_Q5_K_Q8_1_MMVQ, vec_dot_q5_K_q8_1>(ent, n_ent, w_off, x, x_stride, x_by_row, y, y_stride, n_in, n_out, st); break;
+        case GGML_TYPE_Q6_K: launch<GGML_TYPE_Q6_K, VDR_Q6_K_Q8_1_MMVQ, vec_dot_q6_K_q8_1>(ent, n_ent, w_off, x, x_stride, x_by_row, y, y_stride, n_in, n_out, st); break;
         default: throw std::invalid_argument("grouped_mmvq: type " + std::to_string(type) + " is not supported");
     }
     const cudaError_t e = cudaGetLastError();

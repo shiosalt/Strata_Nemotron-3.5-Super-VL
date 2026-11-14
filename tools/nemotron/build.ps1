@@ -106,13 +106,15 @@ if ($VisionGpu) { Assert-NotRunning "build\vision-cuda" }
 
 # ---- the engine
 # (the release flags are given: this tree's configure leaves CMAKE_CXX_FLAGS_RELEASE empty on MSVC, and the CPU experts then run without /O2)
-$targets = "strata strata-nemotron"
-if ($Tests) { $targets += " nemotron_kernels_parity nemotron_engine_parity nemotron_cpu_experts_test" }
+# strata_kq: the K-quant prompt kernels UD-Q4_K_XL's experts use (loaded beside strata.exe with STRATA_MMQ_KQ=1);
+# STRATA_ORCA_Q4KS_MMQ: the Q5_0 prompt kernel of its down experts
+$targets = "strata strata-nemotron strata_kq"
+if ($Tests) { $targets += " nemotron_kernels_parity nemotron_engine_parity nemotron_cpu_experts_test nemotron_grouped_mmvq_test" }
 $flags = '"-DCMAKE_CXX_FLAGS_RELEASE=/O2 /Ob2 /DNDEBUG" "-DCMAKE_C_FLAGS_RELEASE=/O2 /Ob2 /DNDEBUG"'
 $tests_on = if ($Tests) { "ON" } else { "OFF" }
 Say "configuring $BuildDir (sm $Arch) and building $targets with $Jobs jobs; this takes a while (log: build\build-nemotron.log)"
 $rc = Invoke-Vs @(
-    "cmake -S . -B `"$BuildDir`" -G Ninja -DCMAKE_BUILD_TYPE=Release -DSTRATA_ENABLE_CUDA=ON -DSTRATA_NATIVE_EXPERTS=ON -DSTRATA_BUILD_TESTS=$tests_on -DSTRATA_PORTABLE=$port `"-DCMAKE_CUDA_ARCHITECTURES=$Arch`" $flags",
+    "cmake -S . -B `"$BuildDir`" -G Ninja -DCMAKE_BUILD_TYPE=Release -DSTRATA_ENABLE_CUDA=ON -DSTRATA_NATIVE_EXPERTS=ON -DSTRATA_BUILD_TESTS=$tests_on -DSTRATA_PORTABLE=$port -DSTRATA_ORCA_Q4KS_MMQ=ON `"-DCMAKE_CUDA_ARCHITECTURES=$Arch`" $flags",
     "cmake --build `"$BuildDir`" --target $targets -j $Jobs"
 ) $log
 if ($rc -ne 0) { Get-Content $log -Tail 30; Fail "the engine build failed (the end of the log is above)" }

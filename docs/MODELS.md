@@ -1,4 +1,4 @@
-﻿# Which model? Sizes, versions and what fits
+# Which model? Sizes, versions and what fits
 
 This page helps you choose a model and check that your computer can run it. It covers DeepSeek V4.1-Flash,
 Qwen3.8-Flash-Next (and its variants), Qwen3.6-35B-A3B and, in this fork, Nemotron-3.5-Super-VL (engine built from source).
@@ -302,6 +302,8 @@ then the Terminal sets the model up (`--family nemotron35`). The desktop app doe
 | Size | Download | RAM + VRAM for the model | In plain words |
 | --- | ---: | ---: | --- |
 | **UD-IQ3_XXS** | 59.8 GB (+ 1.7 GB picture reader) | 64 GB of RAM and two 16 GB cards were enough | 3-bit (Unsloth Dynamic) |
+| UD-Q3_K_XL | 65.8 GB (+ 1.7 GB) | the same; a short request 21-25 tokens/s, against 27-28 with UD-IQ3_XXS | 3-bit with more 4-bit experts |
+| UD-Q4_K_XL | 86.9 GB (+ 1.7 GB) | 96 GB of RAM; a short request 18 tokens/s ([NEMOTRON35_PROGRESS.md](NEMOTRON35_PROGRESS.md)) | 4-bit, K-quant experts |
 
 **Measured on:** 2 x RTX 5060 Ti 16 GB, Ryzen 7 5700X, 96 GB RAM, Windows, 128K context.
 

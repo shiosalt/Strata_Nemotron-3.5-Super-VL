@@ -9484,7 +9484,7 @@ def install_nemotron(a, family) -> int:
     say(f"  {fam['title']} - {fam['by']}: {fam['about']}")
     say(f"  Size {model}: {md['about']}")
     cards = [] if a.backend in ("hip", "sycl") else gpus()
-    for line in N.fit_lines(ram_gb(), cards):
+    for line in N.fit_lines(ram_gb(), cards, model):
         warn(line)
     # the engine first: without it the 60 GB download would be of no use on this computer
     exe = N.find_engine(home(), ROOT)

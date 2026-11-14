@@ -2618,7 +2618,8 @@ class Runner:
             try:
                 from strata_control import nemotron35
                 comp = self.catalog.computer()
-                warns += [w[0].upper() + w[1:] + "." for w in nemotron35.fit_lines(comp.ram_gb, list(comp.usable_gpus))]
+                size = s.model if s.model in nemotron35.MODELS else next(iter(nemotron35.MODELS))
+                warns += [w[0].upper() + w[1:] + "." for w in nemotron35.fit_lines(comp.ram_gb, list(comp.usable_gpus), size)]
             except Exception:                                # noqa: BLE001 - a plan that cannot read the hardware still shows the rest
                 pass
         row = self.row()

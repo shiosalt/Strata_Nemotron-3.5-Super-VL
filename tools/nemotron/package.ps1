@@ -40,6 +40,7 @@ $files = [ordered]@{
     "strata.exe"          = Join-Path $Root "$BuildDir\strata.exe"
     "strata-nemotron.exe" = Join-Path $Root "$BuildDir\strata-nemotron.exe"
     "strata-vision.exe"   = Join-Path $Root "$VisionBuildDir\bin\strata-vision.exe"
+    "strata_kq.dll"       = Join-Path $Root "$BuildDir\strata_kq.dll"   # (UD-Q4_K_XL's K-quant prompt kernels; loaded at run time, not imported)
 }
 foreach ($k in $files.Keys) { if (-not (Test-Path $files[$k])) { Fail "$($files[$k]) is missing: build it first (see the top of this script)" } }
 # a portable build: the static MSVC runtime and the AVX2 baseline (STRATA_PORTABLE=ON in its CMake cache)
@@ -95,6 +96,7 @@ The steps are in the repository's README ("Install").
   strata.exe            the engine (strata --families lists nemotron_h_moe)
   strata-nemotron.exe   the same engine as a command (--bench-cpu, tests)
   strata-vision.exe     the picture reader (CPU), built against llama.cpp $llama
+  strata_kq.dll         the K-quant prompt kernels (UD-Q4_K_XL's experts; the run config sets STRATA_MMQ_KQ=1)
   $(($extra.Keys) -join ', ')   from the CUDA toolkit $cudaver, under CUDA-EULA.txt
 
 Built from commit $commit$dirty, CUDA $cudaver, GPU code for $arch, AVX2 baseline, static MSVC runtime.

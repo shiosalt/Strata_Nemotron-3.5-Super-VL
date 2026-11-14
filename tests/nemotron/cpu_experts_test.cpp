@@ -155,6 +155,10 @@ int main() {
     pair_case(GGML_TYPE_IQ2_XS, GGML_TYPE_Q2_0, pool);
     pair_case(GGML_TYPE_IQ2_S, GGML_TYPE_Q2_0, pool);
     pair_case(GGML_TYPE_Q8_0, GGML_TYPE_Q8_0, pool);
+    // UD-Q4_K_XL's pairs: Q5_K / Q5_0, Q4_K / IQ4_NL, Q6_K / Q5_0
+    pair_case(GGML_TYPE_Q5_K, GGML_TYPE_Q5_0, pool);
+    pair_case(GGML_TYPE_Q4_K, GGML_TYPE_IQ4_NL, pool);
+    pair_case(GGML_TYPE_Q6_K, GGML_TYPE_Q5_0, pool);
     own_kernel_case(GGML_TYPE_Q2_0, 2688);      // (the down width)
     {
         N::ExpertFmt f;

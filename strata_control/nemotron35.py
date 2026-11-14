@@ -34,24 +34,57 @@ MMPROJ = "mmproj-BF16.gguf"
 REPO_FOLDER = "NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-GGUF"    # the folder under <data>/models (the repository's name, as a Hub download names it)
 LICENSE = "NVIDIA's license for the model: its model card says which (the repository " + REPO + ")"
 
-_SHARD = "NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-UD-IQ3_XXS-{i:05d}-of-00003.gguf"
-FILES = {                                                      # name: (bytes, sha256)
-    _SHARD.format(i=1): (7874568, "01150188b68c1ebf4528d095eab5fa12b7ae18acfe7cb9fcc5563c0772badd94"),
-    _SHARD.format(i=2): (49997462976, "fbf889020bf9effe03da67985d24a1b5d58ad382fcdd02fa390c09687abc0957"),
-    _SHARD.format(i=3): (9758873024, "e69358032031aa6dac6838dffb03ad2d54e510bad2fea10513db7dd27dfbd70b"),
+_SHARD = "NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-{q}-{i:05d}-of-00003.gguf"
+# name: (bytes, sha256); the shards of UD-Q3_K_XL and UD-Q4_K_XL from the Hub's tree at REVISION (the LFS oid is the file's SHA-256; their
+# first shards checked here against the files on the measured PC, 2026-11-14)
+FILES = {
+    _SHARD.format(q="UD-IQ3_XXS", i=1): (7874568, "01150188b68c1ebf4528d095eab5fa12b7ae18acfe7cb9fcc5563c0772badd94"),
+    _SHARD.format(q="UD-IQ3_XXS", i=2): (49997462976, "fbf889020bf9effe03da67985d24a1b5d58ad382fcdd02fa390c09687abc0957"),
+    _SHARD.format(q="UD-IQ3_XXS", i=3): (9758873024, "e69358032031aa6dac6838dffb03ad2d54e510bad2fea10513db7dd27dfbd70b"),
+    _SHARD.format(q="UD-Q3_K_XL", i=1): (7874568, "b2a570b4fc2e2e0ef3657937d6d4689c5d9647125e5fe22e31426789cf4e02fa"),
+    _SHARD.format(q="UD-Q3_K_XL", i=2): (49225290592, "94827cf22f98854a68127fd4a18cca136951d1181bba8c21a7d9dcd6d3c68674"),
+    _SHARD.format(q="UD-Q3_K_XL", i=3): (16528375872, "c2245a2faa51dc1aabcb6b58b7c311bc06ebada10345057e106ac94fcfcef8ce"),
+    _SHARD.format(q="UD-Q4_K_XL", i=1): (7874568, "04e0b45e70ab5c86c6b5d3b0133cc35fc10861015bac7dcff867dcf115dc81c5"),
+    _SHARD.format(q="UD-Q4_K_XL", i=2): (49851272832, "868a7fa360ff10bc7e072e4bb4f8771b280ca35a087a55125bc21f7ebb9962b7"),
+    _SHARD.format(q="UD-Q4_K_XL", i=3): (37048096032, "684abb5b5306b18a046ee69e3375a0e863d14d265e0ffa52c33442d375d08b7d"),
     MMPROJ: (1733695840, "9c09381a5744d0ea9a30048c94922f6f25ee0d63842de9c45779eca4fb5924d9"),
 }
 MODELS = {
     "UD-IQ3_XXS": {
         "about": "3-bit (Unsloth Dynamic IQ3_XXS), 59.8 GB: two 16 GB cards and 64 GB of RAM or more",
         "subdir": "UD-IQ3_XXS",                                # the folder at the repository; the mmproj is at its top
-        "shards": [_SHARD.format(i=i) for i in (1, 2, 3)],
+        "shards": [_SHARD.format(q="UD-IQ3_XXS", i=i) for i in (1, 2, 3)],
         # RAM: the 49.2 GiB of routed experts are copied into pinned memory at load (--no-pin turns it off); the 96 GB PC it was measured on
         # had room to spare, a smaller one was not tried
         "ram_gb": 64,
         "arena_gb": 52.8,
     },
+    # the same experts' types as UD-IQ3_XXS, more of them 4-bit (up IQ4_XS / IQ3_XXS / IQ2_XS, down IQ4_NL / Q2_0): 51.8 GiB of routed
+    # experts (+2.8 GiB the MTP block's), about 10% more than UD-IQ3_XXS, so fewer of them fit in VRAM
+    "UD-Q3_K_XL": {
+        "about": "3-bit with more 4-bit experts (Unsloth Dynamic Q3_K_XL), 65.8 GB: two 16 GB cards and 64 GB of RAM or more",
+        "subdir": "UD-Q3_K_XL",
+        "shards": [_SHARD.format(q="UD-Q3_K_XL", i=i) for i in (1, 2, 3)],
+        "ram_gb": 64,
+        "arena_gb": 58.6,
+    },
+    # K-quant experts (up Q5_K / Q4_K / Q6_K, down Q5_0 / IQ4_NL): 70.6 GiB of routed experts (+2.8 GiB), more than Windows lets be
+    # page-locked (--pin-gib, 30 GiB), so the rest is read from the file cache; their prompt kernels are strata_kq's, opted in by STRATA_MMQ_KQ
+    "UD-Q4_K_XL": {
+        "about": "4-bit (Unsloth Dynamic Q4_K_XL, K-quant experts), 86.9 GB: two 16 GB cards and 96 GB of RAM or more",
+        "subdir": "UD-Q4_K_XL",
+        "shards": [_SHARD.format(q="UD-Q4_K_XL", i=i) for i in (1, 2, 3)],
+        "ram_gb": 90,                                          # (a "96 GB" PC reports 95.9)
+        "arena_gb": 78.8,
+        "env": {"STRATA_MMQ_KQ": "1"},
+    },
 }
+
+
+def model_of_first(first: Path) -> str | None:
+    """The size whose first shard is `first` (by its file name), or None."""
+    name = Path(first).name
+    return next((m for m, d in MODELS.items() if d["shards"][0] == name), None)
 CONTEXTS = {"128k": 131072, "256k": 262144}
 DEFAULT_CONTEXT = 131072
 # drafts per step: temperature 1.0, 0/2/3/4 drafts 10.5/13.6/14.7/13.1 tok/s (2026-11-10, before the MTP slots); with the MTP slots and the
@@ -240,6 +273,12 @@ def build_config(*, first: Path, exe: Path, tokenizer: Path, out: Path, context:
             vis["cuda_device"] = gpus[-1]                  # the reader's own card (the engine's last stage card): the engine leaves room for it
             args += ["--vram-reserve-mib", str(int(vision_reserve_mib))]
         cfg["vision"] = vis
+    env = (MODELS.get(model_of_first(first) or "") or {}).get("env")
+    if env:                                                # (UD-Q4_K_XL: its K-quant experts' prompt kernels, strata_kq)
+        cfg["env"] = dict(env)
+    # the first start reads the whole set (60-90 GB): from a hard disk that took longer than the server's default 900 s (UD-Q3_K_XL on a
+    # SATA HDD, 2026-11-14)
+    cfg["engine_ready_s"] = 3600
     return cfg
 
 
@@ -252,7 +291,7 @@ def write(path: Path, cfg: dict) -> Path:
     return path
 
 
-def fit_lines(ram_gb: float | None, cards: list[dict]) -> list[str]:
+def fit_lines(ram_gb: float | None, cards: list[dict], model: str = "UD-IQ3_XXS") -> list[str]:
     """Plain warnings (never a refusal) for this computer: an NVIDIA card is needed (the engine is CUDA only), and the measured setup had two
     16 GB cards and 96 GB of RAM."""
     out = []
@@ -262,7 +301,8 @@ def fit_lines(ram_gb: float | None, cards: list[dict]) -> list[str]:
     vram = sum(float(c.get("vram_gb") or 0) for c in nvidia)
     if nvidia and vram < 30:
         out.append(f"the cards have {vram:.0f} GB of graphics memory together; it was measured on two 16 GB cards, so less may not start")
-    if ram_gb is not None and float(ram_gb) < MODELS["UD-IQ3_XXS"]["ram_gb"]:
-        out.append(f"this computer has {float(ram_gb):.0f} GB of RAM; the experts take about 53 GB of it (measured on 96 GB), so it may not start "
-                   "(the engine's --no-pin leaves them in the file cache instead, slower)")
+    md = MODELS.get(model) or MODELS["UD-IQ3_XXS"]
+    if ram_gb is not None and float(ram_gb) < md["ram_gb"]:
+        out.append(f"this computer has {float(ram_gb):.0f} GB of RAM; {model}'s experts take about {md['arena_gb']:.0f} GB of it (measured on 96 GB), "
+                   "so it may not start (the engine's --no-pin leaves them in the file cache instead, slower)")
     return out

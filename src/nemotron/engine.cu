@@ -46,6 +46,8 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>  // SetProcessWorkingSetSizeEx (room to lock the arena)
+#else
+#include <unistd.h>   // sysconf (the RAM, for the lock budget)
 #endif
 
 namespace strata::nemotron {
@@ -299,6 +301,7 @@ struct EngineImpl {
     int32_t* h_picks = nullptr;
     int32_t* h_tok = nullptr;
     float* h_logits = nullptr;
+    uint8_t* probe_host = nullptr;   // the link probe's 64 MiB (page-locked before the experts are)
     cudaEvent_t ev = nullptr;
     // the MoE paths' host staging per stage (the prefill pipeline runs the stages at once): stage 0's are the buffers above, the others
     // have their own when the pipeline is on (else every stage uses stage 0's, one at a time)
@@ -785,6 +788,9 @@ bool EngineImpl::load(const std::string& path, std::string& err) {
     }
     {
         const char* pe = std::getenv("STRATA_NEMO_PIN");
+        // the link probe's page-locked buffer before the experts are locked: when their locking meets Windows' limit (a registration that
+        // fails), no page-locked allocation succeeds after it (UD-Q3_K_XL on this PC, 2026-11-14: the probe's cudaHostAlloc, out of memory)
+        probe_host = halloc<uint8_t>((size_t) 64 << 20);
         pinned = o.pin_experts && !(pe && std::atoi(pe) == 0) && pin_experts();
     }
     probe_links();
@@ -1138,12 +1144,48 @@ bool EngineImpl::pin_experts() {
     // STRATA_NEMO_PIN_ALLOC=1: cudaHostAlloc as before.
     const char* pa = std::getenv("STRATA_NEMO_PIN_ALLOC");
     const bool host_alloc = pa && std::atoi(pa) != 0;
+    // Registered memory has a ceiling of its own on Windows (this PC: 40.5 GiB went, the next layer failed, and after a failed
+    // registration even small cudaHostAlloc buffers failed): register up to a budget below it and never try past it.
+#if defined(_WIN32)
+    // 30, not 36: with UD-Q3_K_XL 30.9 GiB (the second card's 21 layers) worked, and 33.9 GiB (4 of the first card's layers more) left
+    // the first card unable to allocate 64 MiB afterwards, every registration having succeeded (2026-11-14); UD-IQ3_XXS had gone to 34.3.
+    // The first card's layers lose little: its slow link takes no PCIe share (the share settles at 0), and the CPU reads the mapped file as fast
+    double budget_gib = o.pin_gib >= 0 ? o.pin_gib : 30.0;
+#else
+    double budget_gib = o.pin_gib >= 0 ? o.pin_gib : 1e9;   // (the ceiling was seen on Windows; elsewhere everything is tried)
+#endif
+    // The locked copies come on top of the file's pages, which the layers left unlocked are read from: the copies and every expert of the
+    // file together must leave the RAM 10 GiB, or the file's pages are pushed out (and read from the disk again while it answers).  Under
+    // 16 GiB nothing is locked: a few locked layers cost more than they give.  Measured 2026-11-14/15 on 95.9 GiB: UD-IQ3_XXS (49.2 GiB of
+    // experts) 28.1 locked, fine; UD-Q3_K_XL (54.5) 30.9 fine, 33.9 failed; UD-Q4_K_XL (73.4) 16.2 failed, 9.0 locked 15 tok/s against
+    // 18 with none.  An explicit --pin-gib is taken as it is.
+    if (o.pin_gib < 0) {
+        double ram_gib = 0;
+#if defined(_WIN32)
+        MEMORYSTATUSEX ms{};
+        ms.dwLength = sizeof ms;
+        if (GlobalMemoryStatusEx(&ms)) ram_gib = (double) ms.ullTotalPhys / 1073741824.0;
+#else
+        const long pages = sysconf(_SC_PHYS_PAGES), psz = sysconf(_SC_PAGE_SIZE);
+        if (pages > 0 && psz > 0) ram_gib = (double) pages * (double) psz / 1073741824.0;
+#endif
+        if (ram_gib > 0) {
+            const double room = ram_gib - (double) total / 1073741824.0 - 10.0;
+            budget_gib = std::min(budget_gib, room < 16.0 ? 0.0 : room);
+            if (budget_gib <= 0) {
+                if (o.verbose)
+                    std::fprintf(stderr, "strata-nemotron: the routed experts (%.1f GiB) are read from the mapped file, none page-locked: %.0f GiB of RAM "
+                                 "leaves too little room for locked copies beside them (--pin-gib N locks N GiB anyway)\n", total / 1073741824.0, ram_gib);
+                return false;
+            }
+        }
+    }
 #if defined(_WIN32)
     if (!host_alloc) {   // the pages a process locks count against its working set's maximum: make room for the arena and some
         SIZE_T mn = 0, mx = 0;
         DWORD fl = 0;
         GetProcessWorkingSetSizeEx(GetCurrentProcess(), &mn, &mx, &fl);
-        const SIZE_T want = (SIZE_T) total + ((SIZE_T) 4 << 30);
+        const SIZE_T want = (SIZE_T) std::min<double>((double) total, budget_gib * 1073741824.0) + ((SIZE_T) 4 << 30);
         if (mx < want && !SetProcessWorkingSetSizeEx(GetCurrentProcess(), std::max<SIZE_T>(mn, want - ((SIZE_T) 2 << 30)), want,
                                                      QUOTA_LIMITS_HARDWS_MIN_DISABLE | QUOTA_LIMITS_HARDWS_MAX_DISABLE) && o.verbose)
             std::fprintf(stderr, "strata-nemotron: the working set could not be raised to %.1f GiB (error %lu)\n", want / 1073741824.0,
@@ -1165,13 +1207,6 @@ bool EngineImpl::pin_experts() {
     };
     std::vector<uint8_t*> bufs;
     int n_alloc = 0;
-    // Registered memory has a ceiling of its own on Windows (this PC: 40.5 GiB went, the next layer failed, and after a failed
-    // registration even small cudaHostAlloc buffers failed): register up to a budget below it and never try past it.
-#if defined(_WIN32)
-    const double budget_gib = o.pin_gib >= 0 ? o.pin_gib : 36.0;
-#else
-    const double budget_gib = o.pin_gib >= 0 ? o.pin_gib : 1e9;   // (the ceiling was seen on Windows; elsewhere everything is tried)
-#endif
     size_t locked = 0;
     for (Layer* y : moe) {
         uint8_t* p = nullptr;
@@ -1275,7 +1310,7 @@ bool EngineImpl::pin_experts() {
 /// expert on a Ryzen 7 5700X, DDR4); the share balances the two, as Strata's own PCIe share does (L / (L + R)).
 void EngineImpl::probe_links() {
     const size_t n = (size_t) 64 << 20;
-    uint8_t* hb = halloc<uint8_t>(n);
+    uint8_t* hb = probe_host ? probe_host : halloc<uint8_t>(n);
     std::vector<double> fr_env;
     if (const char* v = std::getenv("STRATA_NEMO_PCIE_FRAC"))   // "f" or "f0,f1": per GPU, for measuring
         for (const char* q = v; *q;) {

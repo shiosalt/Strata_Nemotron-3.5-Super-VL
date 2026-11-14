@@ -42,7 +42,7 @@ struct EngineOptions {
     ///< -1: scaled per GPU by its measured link (a slow link sends more to the CPU)
     bool pin_experts = true;       ///< copy the routed experts into page-locked RAM at load (faster copies, the decode's PCIe share)
     double pcie_frac = -1;         ///< decode: the share of missed experts the GPU copies (0..1; -1: from the link and the CPU's speed)
-    double pin_gib = -1;           ///< the most GiB of experts page-locked (registered), the fast-link GPU's layers first (-1: 36 on Windows; the rest
+    double pin_gib = -1;           ///< the most GiB of experts page-locked (registered), the fast-link GPU's layers first (-1: 30 on Windows; the rest
                                    ///< stay in the mapped file, read by the CPU as fast, without a PCIe share)
     int mtp_slots = 0;             ///< VRAM slots for the MTP block's own routed experts, on its GPU (0: none, every draft's experts on the
                                    ///< CPU or over the link); they come out of that GPU's room for the other layers' slots

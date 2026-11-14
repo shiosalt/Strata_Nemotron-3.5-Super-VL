@@ -56,7 +56,10 @@ sm_120)向けのコードが入っていますが、試したのは RTX 50 だ�
 .venv\Scripts\python.exe strata.py launch --stop
 ```
 
-- モデルのファイル(3 シャード 59.8 GB と画像リーダー 1.7 GB)は固定のリビジョンからダウンロードし、サイズと SHA-256 を確かめます。
+- サイズは 3 つ: `UD-IQ3_XXS`(59.8 GB、既定、いちばん速い)、`UD-Q3_K_XL`(65.8 GB、4 bit の expert が多い。短い依頼で 2 割ほど
+  遅い)、`UD-Q4_K_XL`(86.9 GB、K-quant の expert。RAM 96 GB が必要。短い依頼で 18 tok/s。[NEMOTRON35_PROGRESS.md](NEMOTRON35_PROGRESS.md))。
+  `--model` で選びます。
+- モデルのファイル(3 シャードと画像リーダー 1.7 GB)は固定のリビジョンからダウンロードし、サイズと SHA-256 を確かめます。
   置き場所は `<データフォルダ>\models\NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-GGUF\UD-IQ3_XXS\`。
 - 手元のファイルを使うとき: `strata.py launch --model-path <folder>\NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-GGUF`(サイズのフォルダ、その上の
   フォルダ、シャード 1 つのどれでも)。何もコピーしません。
@@ -129,7 +132,7 @@ API は OpenAI 互換(`/v1/chat/completions`)と Anthropic 互換(`/v1/messages`
 | オプション | 既定 | 内容 |
 | --- | --- | --- |
 | `--no-pin` | pin する | expert を pinned RAM にコピーしない(RAM が少ない PC 用。遅くなる) |
-| `--pin-gib N` | Windows では 36 | ページ固定する expert の上限(GiB)。速いリンクの GPU の層から順に固定し、残りはファイルの mapping から CPU が読む(その層は PCIe 分担なし)。Windows ではおよそ 40 GiB を超えると固定に失敗するため |
+| `--pin-gib N` | RAM から決める(Windows では最大 30) | ページ固定する expert の上限(GiB)。速いリンクの GPU の層から順に固定し、残りはファイルの mapping から CPU が読む(その層は PCIe 分担なし)。Windows では、固定が全部成功しても 31〜34 GiB を超えると GPU がメモリを確保できなくなることがあったため(UD-Q3_K_XL で 33.9 GiB)。既定では、固定した写しとファイルの expert 全部で RAM を 10 GiB 残す量まで(16 GiB 未満なら固定しない。96 GB の PC の UD-Q4_K_XL は固定なし) |
 | `--mtp-slots N` | 0(設定ファイルは 64) | MTP 層の expert を VRAM に置く数。同じ GPU の他の層のスロットから取る |
 | `--no-gpu-sample` | GPU で選ぶ | サンプリングの上位 k 個を GPU で選ばず、全ロジットを CPU にコピーする(`STRATA_NEMO_GPU_SAMPLE=0` と同じ) |
 | `--bench-cpu` | — | 読み込んだあと、RAM の読み出し速度と CPU の expert カーネルの速度(型ごと)を測って終わる(サーバーは起動しない) |
